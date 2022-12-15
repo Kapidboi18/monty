@@ -1,25 +1,32 @@
 #include "monty.h"
+
 /**
- * _rotr - rotates the stack to the bottom
- * @stack: head
- * @num_line: num line
- */
-
-void _rotr(stack_t **stack, unsigned int num_line)
+* rotr - rotates the last node of a stack_t stack
+* @stack: stack head
+* @line_count: line count
+*
+* Return: void
+*/
+void rotr(stack_t **stack, unsigned int line_count)
 {
-	stack_t *temp2;
+	stack_t *bottom;
+	stack_t *prev;
 
-	if (*stack && (*stack)->next)
-	{
-		temp2 = *stack;
-		if (num_line)
-			while (temp2->next)
-			{
-				temp2 = temp2->next;
-			}
-		temp2->next = *stack;
-		temp2->prev->next = NULL;
-		temp2->prev = NULL;
-		*stack = temp2;
-	}
+	(void) line_count;
+	if (!stack || !*stack || !(*stack)->next)
+		return;
+
+	bottom = *stack;
+
+	while (bottom->next)
+		bottom = bottom->next;
+
+	prev = bottom->prev;
+	bottom->next = *stack;
+	bottom->prev = NULL;
+	prev->next = NULL;
+	(*stack)->prev = bottom;
+	*stack = bottom;
 }
+
+

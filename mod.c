@@ -1,42 +1,35 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 #include "monty.h"
+
 /**
- * _mod - computes the rest of the division of the second
- * top element of the stack by the top element of the stack.
- * @stack: head
- * @num_line: integer
+ * mod - computes the remainder of the division
+ * @stack: stack given by main
+ * @line_cnt: line counter
+ *
+ * Return: void
  */
-
-void _mod(stack_t **stack, unsigned int num_line)
+void mod(stack_t **stack, unsigned int line_cnt)
 {
-	stack_t *temp1;
-	stack_t *temp2;
-	int mult = 0;
+	int result;
 
-	if (*stack && (*stack)->next)
+	if (!stack || !*stack || !((*stack)->next))
 	{
-		if ((*stack)->n == 0)
-		{
-			dprintf (2, "L%u: division by zero\n", num_line);
-			free(global.line);
-			fclose(global.fil);
-			free_l(stack);
-			exit(EXIT_FAILURE);
-		}
-		temp2 = (*stack)->next;
-		mult = temp2->n % (*stack)->n;
-		temp1 = *stack;
-		*stack = (*stack)->next;
-		if (*stack)
-			(*stack)->prev = NULL;
-		free(temp1);
-		(*stack)->n = mult;
-	}
-	else
-	{
-		dprintf (2, "L%d: can't mod, stack too short\n", num_line);
-		free(global.line);
-		fclose(global.fil);
-		free_l(stack);
+		fprintf(stderr, "L%d: can't mod, stack too short\n", line_cnt);
 		exit(EXIT_FAILURE);
+		return;
 	}
+	if (((*stack)->n) == 0)
+	{
+		fprintf(stderr, "L%d: division by zero\n", line_cnt);
+		exit(EXIT_FAILURE);
+		return;
+	}
+
+	result = ((*stack)->next->n) % ((*stack)->n);
+	pop(stack, line_cnt);/*For top node*/
+	(*stack)->n = result;
 }
+

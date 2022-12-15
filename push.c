@@ -1,50 +1,38 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 #include "monty.h"
 
 /**
- * _push - pushes an element to the stack
- * @stack: head
- * @num_line: number line
+ * push - push element into the stack
+ * @stack: stack given by main
+ * @line_cnt: amount of lines
+ *
+ * Return: void
  */
-void _push(stack_t **stack, unsigned int num_line)
+void push(stack_t **stack, unsigned int line_cnt)
 {
-	stack_t *temp;
+	char *n = global.argument;
 
-	_verify2(stack, num_line);
-	if (global.token)
+	if ((is_digit(n)) == 0)
 	{
-		temp = malloc(sizeof(stack_t));
-		if (temp == NULL)
+		fprintf(stderr, "L%d: usage: push integer\n", line_cnt);
+		exit(EXIT_FAILURE);
+	}
+
+	if (global.data_struct == 1)
+	{
+		if (!add_node(stack, atoi(global.argument)))
 		{
-			fputs("Error: malloc failed\n", stderr);
 			exit(EXIT_FAILURE);
 		}
-		temp->n = global.num, temp->next = NULL;
-		temp->prev = NULL;
-		if (*stack)
-		{
-			if (global.flag == 1)
-			{
-				temp->next = *stack;
-				(*stack)->prev = temp;
-				*stack = temp;
-			}
-			else
-			{
-				while ((*stack)->next)
-					*stack = (*stack)->next;
-				(*stack)->next = temp, temp->prev = *stack;
-				while ((*stack)->prev)
-					*stack = (*stack)->prev;
-			}
-		}
-		else
-			*stack = temp;
 	}
 	else
 	{
-		free(global.line), fclose(global.fil);
-		dprintf(2, "L%u: usage: push integer\n", num_line);
-		free_l(stack);
-		exit(EXIT_FAILURE);
+		if (!queue_node(stack, atoi(global.argument)))
+		{
+			exit(EXIT_FAILURE);
+		}
 	}
 }
